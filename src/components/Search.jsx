@@ -2,6 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import md5 from 'md5';
 import Characters from './Characters';
+import Comics from './Comics';
 
 import '../styles/Search.scss';
 
@@ -45,11 +46,30 @@ const Search = () => {
     setCharacterName(event.target.value);
   };
 
-  const handleReset = () => {};
-  //TODO implement later
+  const handleReset = () => {
+    setCharacterData(null);
+    setComicData(null);
+    setCharacterName('');
+  };
 
-  const getComicData = () => {};
-  //TODO implement later
+  const getComicData = (characterId) => {
+    window.scrollTo({ top: 0, left: 0 });
+
+    const timeStamp = new Date().getTime();
+    const hash = generateHash(timeStamp);
+
+    const url = `https://gateway.marvel.com:443/v1/public/characters/${characterId}/comics?apikey=${publicKey}&hash=${hash}&ts=${timeStamp}`;
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((results) => {
+        setComicData(results.data);
+        console.log(results);
+      })
+      .catch((error) => {
+        console.log('Error while fetching comic data', error);
+      });
+  };
 
   return (
     <>
@@ -66,10 +86,10 @@ const Search = () => {
           </button>
         </div>
       </form>
-
       {!comicData && characterData && characterData.results[0] && (
         <Characters data={characterData.results} onClick={getComicData} />
       )}
+      {comicData && comicData.results[0] && <Comics data={comicData.results} />}
     </>
   );
 };

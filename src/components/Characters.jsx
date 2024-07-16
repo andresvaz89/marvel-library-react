@@ -12,7 +12,7 @@ export default function Characters({ data, onClick }) {
               background: `url(${character.thumbnail.path}.${character.thumbnail.extension}) no-repeat center`,
               backgroundSize: 'cover'
             }}
-            onClick={() => onclick(character.id)}
+            onClick={() => onClick(character.id)}
           >
             <div className="caption">{character.name}</div>
             <div className="caption bottom">View Comics</div>
